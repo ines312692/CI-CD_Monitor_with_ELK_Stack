@@ -7,12 +7,12 @@ app.use(bodyParser.json());
 
 const LOGSTASH_URL = `http://${process.env.LOGSTASH_HOST}:${process.env.LOGSTASH_PORT}`;
 
-// Endpoint pour recevoir les logs de GitHub Actions
+// Endpoint to receive logs from GitHub Actions
 app.post('/webhook', async (req, res) => {
   try {
     const logData = req.body;
 
-    console.log(' Log reçu de GitHub Actions:', {
+    console.log('Log received from GitHub Actions:', {
       workflow: logData.workflow_name,
       status: logData.conclusion,
       repo: logData.repository
@@ -23,22 +23,22 @@ app.post('/webhook', async (req, res) => {
       headers: { 'Content-Type': 'application/json' }
     });
 
-    console.log(' Log envoyé à Logstash');
-    res.status(200).json({ message: 'Log reçu et traité' });
+    console.log('Log sent to Logstash');
+    res.status(200).json({ message: 'Log received and processed' });
 
   } catch (error) {
-    console.error(' Erreur:', error.message);
+    console.error('Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 });
 
-// Endpoint de santé
+// Health endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', service: 'github-actions-webhook' });
 });
 
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Webhook receiver démarré sur le port ${PORT}`);
-  console.log(`📡 Prêt à recevoir les logs GitHub Actions`);
+  console.log(`Webhook receiver started on port ${PORT}`);
+  console.log('Ready to receive GitHub Actions logs');
 });
